@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberbullying Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="logo">
+        <img src="{{ url_for('static', filename='images/icons8-twitter-150.png') }}" alt="Logo" class="logo-img">
+    </div>
+    <h1>Cyberbullying Tweet Classifier</h1>
+
+    <!-- Form for user to input tweet -->
+    <form action="/predict" method="POST">
+        <label for="tweet">Enter Tweet:</label>
+        <textarea id="tweet" name="tweet" rows="4" cols="50" required></textarea><br><br>
+        <input type="submit" value="Predict">
+    </form>
+
+    {% if tweet %}
+        <h2>Prediction Result:</h2>
+        <p><strong>Tweet:</strong> {{ tweet }}</p>
+        <p><strong>Predicted Cyberbullying Type:</strong> {{ predicted_category }}</p>
+    {% endif %}
+</body>
+</html>
