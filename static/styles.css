@@ -74,12 +74,12 @@ form {
 /* Logo Styling */
 .logo {
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: 1%;
+    left: 1%;
 }
 
 .logo-img {
-    width: 80px; /* Adjust the size as needed */
+    width: 40%; /* Adjust the size as needed */
     height: auto;
     background-color: white;
 }

@@ -3,26 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyberbullying Prediction</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Cyberbullying Detection Chatbot</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-image: url('static/images/pexels-felixmittermeier-956999.jpg'); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Overlay to ensure text visibility */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+            z-index: -1; /* Place the overlay behind the content */
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .chat-header {
+            background-color: transparent;
+            color: #00b8d4;
+            padding: 15px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            border-bottom: 2px solid #444;
+        }
+
+        .chat-box {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: transparent;
+        }
+
+        .chat-box .message {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-box .user {
+            text-align: right;
+            color: #00b8d4;
+            justify-content: flex-end;
+        }
+
+        .chat-box .bot {
+            text-align: left;
+            color: #f1f1f1;
+            justify-content: flex-start;
+        }
+
+        .message .user-text, .message .bot-text {
+            max-width: 80%;
+            word-wrap: break-word;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .user .user-text {
+            background-color: #333;
+        }
+
+        .bot .bot-text {
+            background-color: #444;
+        }
+
+        .user-icon {
+            margin-left: 10px;
+            font-size: 22px;
+            color: #00b8d4;
+        }
+
+        /* Chat Input Styles */
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            background-color: #222;
+            border-top: 2px solid #444;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            background-color: #333;
+            color: white;
+        }
+
+        .chat-input button {
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #00b8d4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chat-input button:hover {
+            background-color: #008c9e;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .chat-header {
+                font-size: 20px;
+                padding: 10px;
+            }
+            .chat-input input {
+                font-size: 14px;
+                padding: 12px;
+            }
+            .chat-input button {
+                font-size: 14px;
+                padding: 12px;
+            }
+            .user-icon {
+                font-size: 18px;
+                margin-left: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chat-header {
+                font-size: 18px;
+                padding: 8px;
+            }
+            .chat-box {
+                padding: 10px;
+            }
+            .chat-input input {
+                font-size: 14px;
+                padding: 10px;
+            }
+            .chat-input button {
+                font-size: 14px;
+                padding: 10px;
+            }
+            .user-icon {
+                font-size: 16px;
+                margin-left: 6px;
+            }
+        }
+    </style>
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input');
+            const chatBox = document.getElementById('chat-box');
+            const message = userInput.value.trim();
+
+            if (!message) return;
+
+            // Append user message to chat
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user';
+            const userText = document.createElement('div');
+            userText.className = 'user-text';
+            userText.textContent = message;
+            const userIcon = document.createElement('i');
+            userIcon.className = 'fas fa-user user-icon';
+            userMessage.appendChild(userText);
+            userMessage.appendChild(userIcon);
+            chatBox.appendChild(userMessage);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Clear input
+            userInput.value = '';
+
+            // Send message to server
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ tweet: message }),
+                });
+
+                const data = await response.json();
+
+                // Append bot response to chat
+                const botMessage = document.createElement('div');
+                botMessage.className = 'message bot';
+                const botText = document.createElement('div');
+                botText.className = 'bot-text';
+                botText.textContent = `Bot: ${data.predicted_category} - ${data.explanation}`;
+                botMessage.appendChild(botText);
+                chatBox.appendChild(botMessage);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch (error) {
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'message bot';
+                const errorText = document.createElement('div');
+                errorText.className = 'bot-text';
+                errorText.textContent = 'Bot: Sorry, something went wrong!';
+                errorMessage.appendChild(errorText);
+                chatBox.appendChild(errorMessage);
+            }
+        }
+
+        // Display welcome message when the page loads
+        window.onload = function() {
+            const chatBox = document.getElementById('chat-box');
+            const welcomeMessage = document.createElement('div');
+            welcomeMessage.className = 'message bot';
+            const welcomeText = document.createElement('div');
+            welcomeText.className = 'bot-text';
+            welcomeText.textContent = "Bot: Welcome! I am your personal Assistant. Type in your tweets, and I'll tell you if it's cyberbullying or not.";
+            welcomeMessage.appendChild(welcomeText);
+            chatBox.appendChild(welcomeMessage);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        };
+    </script>
 </head>
 <body>
-    <div class="logo">
-        <img src="{{ url_for('static', filename='images/icons8-twitter-150.png') }}" alt="Logo" class="logo-img">
+    <!-- Overlay to darken background -->
+    <div class="overlay"></div>
+
+    <div class="chat-container">
+        <div class="chat-header">Cyberbullying Detection Chatbot</div>
+        <div id="chat-box" class="chat-box"></div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Type your Tweets here..." />
+            <button onclick="sendMessage()">Send</button>
+        </div>
     </div>
-    <h1>Cyberbullying Tweet Classifier</h1>
-
-    <!-- Form for user to input tweet -->
-    <form action="/predict" method="POST">
-        <label for="tweet">Enter Tweet:</label>
-        <textarea id="tweet" name="tweet" rows="4" cols="50" required></textarea><br><br>
-        <input type="submit" value="Predict">
-    </form>
-
-    {% if tweet %}
-        <h2>Prediction Result:</h2>
-        <p><strong>Tweet:</strong> {{ tweet }}</p>
-        <p><strong>Predicted Cyberbullying Type:</strong> {{ predicted_category }}</p>
-    {% endif %}
 </body>
 </html>

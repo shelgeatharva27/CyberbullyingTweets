@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeTweets.AI</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('static/images/pexels-felixmittermeier-956999.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Overlay to reduce opacity of the background */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Black overlay with 50% opacity */
+            z-index: -1; /* Place the overlay behind the content */
+        }
+
+        /* Header for logo */
+        .header {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 1.5em;
+            color: white;
+            font-weight: bold;
+            z-index: 1;
+        }
+
+        .container {
+            color: white; /* Ensures text is visible on dark backgrounds */
+            max-width: 90%;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .try-button {
+            margin-top: 20px;
+            border-color: white;
+            padding: 15px 30px;
+            background-color: gray;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .try-button:hover {
+            background-color: black;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            .try-button {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5em;
+            }
+            .try-button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header with logo -->
+    <div class="header">
+        SafeTweets.AI
+    </div>
+
+    <!-- Overlay to reduce background opacity -->
+    <div class="overlay"></div>
+
+    <div class="container">
+        <h1>Try SafeTweets.AI</h1>
+        <a href="/predict" class="try-button">Try Our Model</a>
+    </div>
+
+</body>
+</html>
