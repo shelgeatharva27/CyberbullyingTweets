@@ -1,0 +1,10 @@
+Flask               # For creating the web application
+flask-cors         # Optional: Enable Cross-Origin Resource Sharing if needed
+gunicorn           # For deploying on production servers (optional)
+numpy              # If the ML model uses NumPy
+pandas              # If the ML model uses Pandas for data processing
+scikit-learn       # If the ML model is built with scikit-learn
+tensorflow        # Example: If your ML model uses TensorFlow
+transformers      # Example: If using Hugging Face models
+torch              # Example: If using PyTorch models
+requests 
